@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Physics-101</string>
+    <string name="topic_id_intent_key">topicId</string>
+    <string name="topic_name_intent_key">topicName</string>
+    <string name="sub_topic_intent_key">subTopicObject</string>
+    <string name="hoursRequired">Total Hours Required</string>
+    <string name="subTopicName">SubTopic Name</string>
+    <string name="nosLessons">No of lessons</string>
+    <string name="topicName">Topic Name</string>
+    <string name="subTopicDescription">Description</string>
+    <string name="subtopic_desc">This is a description</string>
+    <string name="banner_ad_unit_id">ca-app-pub-7413291023174860/8283216035</string>
+    <string name="admob_app_id">ca-app-pub-7413291023174860~6806482839</string>
+</resources>

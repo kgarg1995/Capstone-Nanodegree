@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:id="@+id/recyclerViewItemParentView"
+              android:padding="@dimen/topic_gridview_item_padding"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:id="@+id/itemSubTopicImage"
+            android:src="@drawable/background"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/activity_left_margin"
+            android:layout_marginStart="@dimen/activity_left_margin">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/subTopicName"
+                android:paddingBottom="@dimen/textViewPadding"
+                android:textSize="@dimen/textSize"
+                android:id="@+id/itemSubTopicName"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/textViewPadding"
+                android:text="@string/hoursRequired"
+                android:textSize="@dimen/textSize"
+                android:id="@+id/itemSubTopicHoursRequired"/>
+
+    </LinearLayout>
+
+</LinearLayout>

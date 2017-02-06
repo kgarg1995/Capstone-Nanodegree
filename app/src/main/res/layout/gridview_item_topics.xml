@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:padding="@dimen/topic_gridview_item_padding"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:id="@+id/itemTopicImage"
+            android:src="@drawable/background"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/topicName"
+            android:paddingTop="@dimen/textViewPadding"
+            android:paddingBottom="@dimen/textViewPadding"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/itemTopicName"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/nosLessons"
+            android:layout_weight="1"
+            android:paddingBottom="@dimen/textViewPadding"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/itemNumberOfSubTopics"/>
+
+    <TextView
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/textViewPadding"
+            android:text="@string/hoursRequired"
+            android:textSize="@dimen/textSize"
+            android:id="@+id/itemHoursRequired"/>
+
+    </LinearLayout>
+
+</LinearLayout>

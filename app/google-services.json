@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "290494655442",
+    "project_id": "physics-101-6a0a0"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290494655442:android:45c218c3dfa60e7e",
+        "android_client_info": {
+          "package_name": "com.iotalabs.physics_101"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTWfqat9vUHHFhZfm-OqdbBdt7fneouws"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-68587717-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
