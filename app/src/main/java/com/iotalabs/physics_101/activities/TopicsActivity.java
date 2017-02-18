@@ -13,7 +13,6 @@ import com.iotalabs.physics_101.adapters.gridview.TopicsGridAdapter;
 import com.iotalabs.physics_101.applications.Physics101Application;
 import com.iotalabs.physics_101.entity.TopicDO;
 import com.iotalabs.physics_101.fragments.SubTopicsFragment;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -105,6 +104,20 @@ public class TopicsActivity extends AppCompatActivity {
 
     }
 
+    private ArrayList<TopicDO> prepareTopicList(List<ParseObject> topicsList) {
+        ArrayList<TopicDO> topicDOList = new ArrayList<>();
+        for(ParseObject topic : topicsList) {
+            TopicDO topicDO =  new TopicDO();
+            topicDO.setTopicId(topic.getInt(TAG_ID));
+            topicDO.setTopicName(topic.getString(TAG_TOPIC_NAME));
+            topicDO.setHoursRequired(topic.getInt(TAG_NUMBER_OF_HOURS_REQUIRED));
+            topicDO.setNumberOfSubTopics(topic.getInt(TAG_NUMBER_OF_SUBTOPICS));
+            topicDO.setImageURL(topic.getString(TAG_IMAGE_URL));
+            topicDOList.add(topicDO);
+        }
+        return topicDOList;
+    }
+
     private class FetchTopics extends AsyncTask<Void, ArrayList<TopicDO>, ArrayList<TopicDO>> {
 
         ProgressDialog progressDialog;
@@ -121,27 +134,16 @@ public class TopicsActivity extends AppCompatActivity {
         protected ArrayList<TopicDO> doInBackground(Void... params) {
 
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Topics");
-            query.findInBackground(new FindCallback<ParseObject>() {
-                public void done(List<ParseObject> topicsList, ParseException e) {
-                    if (e == null) {
-                        topicsArrayList = new ArrayList<>();
-                        for(ParseObject topic : topicsList) {
-                            TopicDO topicDO =  new TopicDO();
-                            topicDO.setTopicId(topic.getInt(TAG_ID));
-                            topicDO.setTopicName(topic.getString(TAG_TOPIC_NAME));
-                            topicDO.setHoursRequired(topic.getInt(TAG_NUMBER_OF_HOURS_REQUIRED));
-                            topicDO.setNumberOfSubTopics(topic.getInt(TAG_NUMBER_OF_SUBTOPICS));
-                            topicDO.setImageURL(topic.getString(TAG_IMAGE_URL));
-                            topicsArrayList.add(topicDO);
-                        }
-                    }
-                    else {
-                        topicsArrayList = null;
-                    }
-                }
-            });
+            try {
+                topicsArrayList = prepareTopicList(query.find());
+            }
+            catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
             return topicsArrayList;
         }
+
 
         @Override
         protected void onPostExecute(ArrayList<TopicDO> topicDOList) {

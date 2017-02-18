@@ -6,7 +6,6 @@ import java.util.List;
 import com.iotalabs.physics_101.R;
 import com.iotalabs.physics_101.adapters.recyclerview.SubTopicRecyclerAdapter;
 import com.iotalabs.physics_101.entity.SubTopicDO;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -134,6 +133,27 @@ public class SubTopicsFragment extends Fragment {
         return true;
     }
 
+    private ArrayList<SubTopicDO> prepareSubTopicDOList(List<ParseObject> subTopicsDOList) {
+
+        ArrayList<SubTopicDO> subTopicDOs = new ArrayList<>();
+
+        for (ParseObject subTopic : subTopicsDOList) {
+            SubTopicDO subTopicDO = new SubTopicDO();
+
+            subTopicDO.setSubTopicId(subTopic.getInt(TAG_SUBTOPIC_ID));
+            subTopicDO.setTopicId(subTopic.getInt(TAG_TOPIC_ID));
+            subTopicDO.setSubTopicName(subTopic.getString(TAG_SUBTOPIC_NAME));
+            subTopicDO.setThumbnailURL(subTopic.getString(TAG_SUBTOPIC_THUMBNAIL_URL));
+            subTopicDO.setImageURL(subTopic.getString(TAG_SUBTOPIC_IAMGE_URL));
+            subTopicDO.setSubTopicDescription(subTopic.getString(TAG_SUBTOPIC_DESCRIPTION));
+            subTopicDO.setHoursRequired(subTopic.getInt(TAG_SUBTOPIC_HOURS_REQUIRED));
+
+            subTopicDOs.add(subTopicDO);
+        }
+
+        return subTopicDOs;
+
+    }
 
     private class FetchSubTopics extends AsyncTask<String, ArrayList<SubTopicDO>, ArrayList<SubTopicDO>> {
 
@@ -152,30 +172,14 @@ public class SubTopicsFragment extends Fragment {
 
             ParseQuery<ParseObject> query = ParseQuery.getQuery("SubTopics");
             query.whereEqualTo("topicId", params[0]);
-            query.findInBackground(new FindCallback<ParseObject>() {
-                public void done(List<ParseObject> subTopicsDOList, ParseException e) {
-                    if (e == null) {
-                        subTopicsList = new ArrayList<>();
-                        for (ParseObject subTopic : subTopicsDOList) {
-                            SubTopicDO subTopicDO = new SubTopicDO();
 
-                            subTopicDO.setSubTopicId(subTopic.getInt(TAG_SUBTOPIC_ID));
-                            subTopicDO.setTopicId(subTopic.getInt(TAG_TOPIC_ID));
-                            subTopicDO.setSubTopicName(subTopic.getString(TAG_SUBTOPIC_NAME));
-                            subTopicDO.setThumbnailURL(subTopic.getString(TAG_SUBTOPIC_THUMBNAIL_URL));
-                            subTopicDO.setImageURL(subTopic.getString(TAG_SUBTOPIC_IAMGE_URL));
-                            subTopicDO.setSubTopicDescription(subTopic.getString(TAG_SUBTOPIC_DESCRIPTION));
-                            subTopicDO.setHoursRequired(subTopic.getInt(TAG_SUBTOPIC_HOURS_REQUIRED));
-
-                            subTopicsList.add(subTopicDO);
-                        }
-                    }
-                    else {
-                        subTopicsList = null;
-                    }
-                }
-            });
-
+            try {
+                subTopicsList = prepareSubTopicDOList(query.find());
+            }
+            catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
             return subTopicsList;
         }
 
