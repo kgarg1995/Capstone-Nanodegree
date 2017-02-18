@@ -28,15 +28,15 @@ public class SubTopicsContract {
 
         public static final String TABLE_NAME = "subtopics";
 
-        public static final String COLUMN_NAME = "hoursRequired";
+        public static final String HOURS_REQUIRED = "hoursRequired";
 
-        public static final String COLUMN_POSTER_URI = "subTopicDescription";
+        public static final String SUB_TOPIC_DESCRIPTION = "subTopicDescription";
 
-        public static final String COLUMN_RATING = "subTopicName";
+        public static final String SUB_TOPIC_NAME = "subTopicName";
 
-        public static final String COLUMN_RELEASE_DATE = "imageURL";
+        public static final String IMAGE_URL = "imageURL";
 
-        public static final String COLUMN_SYNOPSIS = "thumbnailURL";
+        public static final String THUMBNAIL_URL = "thumbnailURL";
 
         public static Uri buildSubTopicsUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

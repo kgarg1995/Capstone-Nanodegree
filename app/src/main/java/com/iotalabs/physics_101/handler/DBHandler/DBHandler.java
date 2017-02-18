@@ -23,11 +23,11 @@ public class DBHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + SubTopicsContract.SubTopicsEntry.TABLE_NAME
             + " (" + SubTopicsContract.SubTopicsEntry._ID + " INTEGER," +
-            SubTopicsContract.SubTopicsEntry.COLUMN_NAME + " TEXT NOT NULL," +
-            SubTopicsContract.SubTopicsEntry.COLUMN_POSTER_URI + " TEXT NOT NULL," +
-            SubTopicsContract.SubTopicsEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL," +
-            SubTopicsContract.SubTopicsEntry.COLUMN_RATING + " REAL NOT NULL," +
-            SubTopicsContract.SubTopicsEntry.COLUMN_SYNOPSIS + " TEXT NOT NULL, " +
+            SubTopicsContract.SubTopicsEntry.HOURS_REQUIRED + " TEXT NOT NULL," +
+            SubTopicsContract.SubTopicsEntry.SUB_TOPIC_DESCRIPTION + " TEXT NOT NULL," +
+            SubTopicsContract.SubTopicsEntry.IMAGE_URL + " TEXT NOT NULL," +
+            SubTopicsContract.SubTopicsEntry.SUB_TOPIC_NAME + " REAL NOT NULL," +
+            SubTopicsContract.SubTopicsEntry.THUMBNAIL_URL + " TEXT NOT NULL, " +
             " UNIQUE (" + SubTopicsContract.SubTopicsEntry._ID + ") ON CONFLICT REPLACE );";
 
         db.execSQL(SQL_CREATE_MOVIE_TABLE);

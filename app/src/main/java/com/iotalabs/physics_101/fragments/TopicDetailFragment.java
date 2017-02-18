@@ -5,8 +5,10 @@ import java.io.InputStream;
 import java.net.URL;
 
 import com.iotalabs.physics_101.R;
+import com.iotalabs.physics_101.dbcontracts.SubTopicsContract;
 import com.iotalabs.physics_101.entity.SubTopicDO;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -73,9 +75,24 @@ public class TopicDetailFragment extends Fragment implements LoaderManager.Loade
         if (subTopicDO != null) {
             activity.getSupportActionBar().setTitle(subTopicDO.getSubTopicName());
             topicDetailsDescription.setText(subTopicDO.getSubTopicDescription());
+
+            addSubTopics(subTopicDO);
         }
         activity.getSupportLoaderManager().initLoader(LOADER_ID , null, this).forceLoad();
         return rootView;
+    }
+
+    private void addSubTopics(SubTopicDO subTopicDO) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SubTopicsContract.SubTopicsEntry._ID, subTopicDO.getSubTopicId());
+        contentValues.put(SubTopicsContract.SubTopicsEntry.HOURS_REQUIRED, subTopicDO.getHoursRequired());
+        contentValues.put(SubTopicsContract.SubTopicsEntry.IMAGE_URL, subTopicDO.getImageURL());
+        contentValues.put(SubTopicsContract.SubTopicsEntry.SUB_TOPIC_NAME, subTopicDO.getSubTopicName());
+        contentValues.put(SubTopicsContract.SubTopicsEntry.THUMBNAIL_URL, subTopicDO.getThumbnailURL());
+        contentValues.put(SubTopicsContract.SubTopicsEntry.SUB_TOPIC_DESCRIPTION, subTopicDO.getSubTopicDescription());
+
+        getContext().getContentResolver().insert(
+            SubTopicsContract.SubTopicsEntry.buildSubTopicsUri(), contentValues);
     }
 
     @Override

@@ -44,10 +44,10 @@ class SubTopicsRemoteViewsFactory implements RemoteViewsService.RemoteViewsFacto
             }
 
             mCursor = mContext.getContentResolver().query(SubTopicsContract.SubTopicsEntry.CONTENT_URI,
-                new String[] { SubTopicsContract.SubTopicsEntry._ID, SubTopicsContract.SubTopicsEntry.COLUMN_NAME,
-                    SubTopicsContract.SubTopicsEntry.COLUMN_POSTER_URI, SubTopicsContract.SubTopicsEntry.COLUMN_RATING,
-                    SubTopicsContract.SubTopicsEntry.COLUMN_RELEASE_DATE,
-                    SubTopicsContract.SubTopicsEntry.COLUMN_SYNOPSIS }, null, null, null);
+                new String[] { SubTopicsContract.SubTopicsEntry._ID, SubTopicsContract.SubTopicsEntry.HOURS_REQUIRED,
+                    SubTopicsContract.SubTopicsEntry.SUB_TOPIC_DESCRIPTION, SubTopicsContract.SubTopicsEntry.SUB_TOPIC_NAME,
+                    SubTopicsContract.SubTopicsEntry.IMAGE_URL,
+                    SubTopicsContract.SubTopicsEntry.THUMBNAIL_URL }, null, null, null);
         } finally {
             Binder.restoreCallingIdentity(token);
         }
