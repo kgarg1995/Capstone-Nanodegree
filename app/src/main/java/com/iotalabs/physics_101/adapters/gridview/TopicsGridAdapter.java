@@ -70,8 +70,8 @@ public class TopicsGridAdapter extends BaseAdapter {
         // update the item view
         final TopicDO topicDO = topicsList.get(position);
         gridViewHolder.topicName.setText(topicDO.getTopicName());
-        gridViewHolder.numberOfSubTopics.setText(topicDO.getNumberOfSubTopics());
-        gridViewHolder.hoursRequired.setText(topicDO.getHoursRequired());
+        gridViewHolder.numberOfSubTopics.setText(String.valueOf(topicDO.getNumberOfSubTopics()));
+        gridViewHolder.hoursRequired.setText(String.valueOf(topicDO.getHoursRequired()));
         Picasso.with(mContext).load(topicDO.getImageURL()).into(gridViewHolder.posterImage);
 
         return convertView;

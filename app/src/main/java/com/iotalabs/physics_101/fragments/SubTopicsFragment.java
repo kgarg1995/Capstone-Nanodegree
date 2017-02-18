@@ -1,6 +1,5 @@
 package com.iotalabs.physics_101.fragments;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,14 +21,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by karangarg on 28/01/17.
@@ -39,7 +35,6 @@ public class SubTopicsFragment extends Fragment {
     private AppCompatActivity activity;
     private String topicId, topicName;
     private String TAG = SubTopicsFragment.class.getSimpleName();
-    private OkHttpClient client;
     private String GET_SUBTOPIC_URL = "http://10.51.0.235:8080/subtopics?topic_id=";
     private ArrayList<SubTopicDO> subTopicsList;
 
@@ -70,8 +65,6 @@ public class SubTopicsFragment extends Fragment {
             topicName = null;
             topicId = null;
         }
-
-        client = new OkHttpClient();
 
     }
 
@@ -141,17 +134,18 @@ public class SubTopicsFragment extends Fragment {
         return true;
     }
 
-    String run(String url) throws IOException {
-
-        Log.d(TAG, "URL " + url);
-
-        Request request = new Request.Builder().url(url).build();
-
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-    }
 
     private class FetchSubTopics extends AsyncTask<String, ArrayList<SubTopicDO>, ArrayList<SubTopicDO>> {
+
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(activity.getBaseContext());
+            progressDialog.setTitle("LOADING");
+            progressDialog.show();
+        }
 
         @Override
         protected ArrayList<SubTopicDO> doInBackground(String... params) {
@@ -188,6 +182,8 @@ public class SubTopicsFragment extends Fragment {
         @Override
         protected void onPostExecute(ArrayList<SubTopicDO> subTopicsList) {
             super.onPostExecute(subTopicsList);
+
+            progressDialog.dismiss();
 
             //TODO call adapter here
             if(subTopicsList != null) {

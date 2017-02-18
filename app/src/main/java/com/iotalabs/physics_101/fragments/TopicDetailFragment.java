@@ -75,10 +75,10 @@ public class TopicDetailFragment extends Fragment implements LoaderManager.Loade
         if (subTopicDO != null) {
             activity.getSupportActionBar().setTitle(subTopicDO.getSubTopicName());
             topicDetailsDescription.setText(subTopicDO.getSubTopicDescription());
+            activity.getSupportLoaderManager().initLoader(LOADER_ID, null, this).forceLoad();
 
             addSubTopics(subTopicDO);
         }
-        activity.getSupportLoaderManager().initLoader(LOADER_ID , null, this).forceLoad();
         return rootView;
     }
 

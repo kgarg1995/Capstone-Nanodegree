@@ -45,7 +45,7 @@ public class SubTopicRecyclerAdapter extends
 
         SubTopicDO subTopicDO = subTopicsList.get(i);
         ReviewViewHolder.subTopicName.setText(subTopicDO.getSubTopicName());
-        ReviewViewHolder.subTopicHoursRequired.setText(subTopicDO.getHoursRequired());
+        ReviewViewHolder.subTopicHoursRequired.setText(String.valueOf(subTopicDO.getHoursRequired()));
         Picasso.with(mContext).load(subTopicDO.getThumbnailURL()).into(ReviewViewHolder.subTopicImage);
 
     }

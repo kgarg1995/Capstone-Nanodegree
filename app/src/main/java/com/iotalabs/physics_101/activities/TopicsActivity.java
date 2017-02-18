@@ -1,6 +1,5 @@
 package com.iotalabs.physics_101.activities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +18,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,9 +27,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class TopicsActivity extends AppCompatActivity {
 
@@ -47,7 +44,6 @@ public class TopicsActivity extends AppCompatActivity {
 
     private GridView topicGridView;
 
-    private OkHttpClient client;
     private Tracker mTracker;
 
     @Override
@@ -57,7 +53,6 @@ public class TopicsActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarTopicActivity);
         setSupportActionBar(toolbar);
-        client = new OkHttpClient();
 
         //initialize admob instance
         MobileAds.initialize(getApplicationContext(), getString(R.string.admob_app_id));
@@ -103,13 +98,6 @@ public class TopicsActivity extends AppCompatActivity {
 
     }
 
-    String run(String url) throws IOException {
-        Request request = new Request.Builder().url(url).build();
-
-        Response response = client.newCall(request).execute();
-        return response.body().string();
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putParcelableArrayList(KEY_SAVEDINSTANCE_DATA, topicsArrayList);
@@ -119,8 +107,19 @@ public class TopicsActivity extends AppCompatActivity {
 
     private class FetchTopics extends AsyncTask<Void, ArrayList<TopicDO>, ArrayList<TopicDO>> {
 
+        ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(TopicsActivity.this);
+            progressDialog.setTitle("LOADING");
+            progressDialog.show();
+        }
+
         @Override
         protected ArrayList<TopicDO> doInBackground(Void... params) {
+
             ParseQuery<ParseObject> query = ParseQuery.getQuery("Topics");
             query.findInBackground(new FindCallback<ParseObject>() {
                 public void done(List<ParseObject> topicsList, ParseException e) {
@@ -147,6 +146,8 @@ public class TopicsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<TopicDO> topicDOList) {
             super.onPostExecute(topicDOList);
+
+            progressDialog.dismiss();
 
             if (topicDOList != null) {
                 TopicsGridAdapter topicsGridAdapter = new TopicsGridAdapter(TopicsActivity.this, topicDOList);
