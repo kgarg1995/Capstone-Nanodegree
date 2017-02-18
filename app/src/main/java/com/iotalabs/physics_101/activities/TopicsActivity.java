@@ -87,7 +87,7 @@ public class TopicsActivity extends AppCompatActivity {
 
         topicGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Intent intent = new Intent(TopicsActivity.this, SubTopicsFragment.class);
+                Intent intent = new Intent(TopicsActivity.this, SubTopicsActivity.class);
                 intent.putExtra(getString(R.string.topic_id_intent_key), topicsArrayList.get(position).getTopicId());
                 intent
                     .putExtra(getString(R.string.topic_name_intent_key), topicsArrayList.get(position).getTopicName());
