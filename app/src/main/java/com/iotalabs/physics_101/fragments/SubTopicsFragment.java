@@ -32,7 +32,8 @@ import android.view.ViewGroup;
 public class SubTopicsFragment extends Fragment {
 
     private AppCompatActivity activity;
-    private String topicId, topicName;
+    private int topicId;
+    private String topicName;
     private String TAG = SubTopicsFragment.class.getSimpleName();
     private String GET_SUBTOPIC_URL = "http://10.51.0.235:8080/subtopics?topic_id=";
     private ArrayList<SubTopicDO> subTopicsList;
@@ -57,12 +58,12 @@ public class SubTopicsFragment extends Fragment {
 
         Intent i = activity.getIntent();
         if (i != null) {
-            topicId = i.getStringExtra(getString(R.string.topic_name_intent_key));
-            topicName = i.getStringExtra(getString(R.string.topic_id_intent_key));
+            topicId = i.getIntExtra(getString(R.string.topic_id_intent_key),1);
+            topicName = i.getStringExtra(getString(R.string.topic_name_intent_key));
         }
         else {
             topicName = null;
-            topicId = null;
+            topicId = 1;
         }
 
     }
@@ -93,10 +94,8 @@ public class SubTopicsFragment extends Fragment {
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(KEY_SAVEDINSTANCE_DATA)) {
             //NO DATA SAVED, FETCH FROM INTERNET
-            if (topicId != null) {
                 FetchSubTopics fetchSubTopics = new FetchSubTopics();
                 fetchSubTopics.execute(topicId);
-            }
         }
         else {
             subTopicsList = savedInstanceState.getParcelableArrayList(KEY_SAVEDINSTANCE_DATA);
@@ -105,10 +104,8 @@ public class SubTopicsFragment extends Fragment {
                 mRecyclerView.setAdapter(mAdapter);
             }
             else {
-                if (topicId != null) {
                     FetchSubTopics fetchSubTopics = new FetchSubTopics();
                     fetchSubTopics.execute(topicId);
-                }
             }
         }
 
@@ -155,20 +152,20 @@ public class SubTopicsFragment extends Fragment {
 
     }
 
-    private class FetchSubTopics extends AsyncTask<String, ArrayList<SubTopicDO>, ArrayList<SubTopicDO>> {
+    private class FetchSubTopics extends AsyncTask<Integer, ArrayList<SubTopicDO>, ArrayList<SubTopicDO>> {
 
         ProgressDialog progressDialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog = new ProgressDialog(activity.getBaseContext());
+            progressDialog = new ProgressDialog(getContext());
             progressDialog.setTitle("LOADING");
             progressDialog.show();
         }
 
         @Override
-        protected ArrayList<SubTopicDO> doInBackground(String... params) {
+        protected ArrayList<SubTopicDO> doInBackground(Integer... params) {
 
             ParseQuery<ParseObject> query = ParseQuery.getQuery("SubTopics");
             query.whereEqualTo("topicId", params[0]);
