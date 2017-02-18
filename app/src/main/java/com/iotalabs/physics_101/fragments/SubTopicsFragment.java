@@ -2,13 +2,15 @@ package com.iotalabs.physics_101.fragments;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
 import com.iotalabs.physics_101.R;
 import com.iotalabs.physics_101.adapters.recyclerview.SubTopicRecyclerAdapter;
 import com.iotalabs.physics_101.entity.SubTopicDO;
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -43,12 +45,12 @@ public class SubTopicsFragment extends Fragment {
 
     private String KEY_SAVEDINSTANCE_DATA = "subTopicDataSet";
 
-    private static String TAG_RESULT = "results";
-    private static String TAG_SUBTOPIC_ID = "id";
-    private static String TAG_SUBTOPIC_NAME = "name";
+    private static String TAG_TOPIC_ID = "topicId";
+    private static String TAG_SUBTOPIC_ID = "subTopicId";
+    private static String TAG_SUBTOPIC_NAME = "subTopicName";
     private static String TAG_SUBTOPIC_THUMBNAIL_URL = "thumbnailURL";
     private static String TAG_SUBTOPIC_IAMGE_URL = "imageURL";
-    private static String TAG_SUBTOPIC_DESCRIPTION = "description";
+    private static String TAG_SUBTOPIC_DESCRIPTION = "subTopicDescription";
     private static String TAG_SUBTOPIC_HOURS_REQUIRED = "hoursRequired";
 
     private RecyclerView mRecyclerView;
@@ -63,7 +65,8 @@ public class SubTopicsFragment extends Fragment {
         if (i != null) {
             topicId = i.getStringExtra(getString(R.string.topic_name_intent_key));
             topicName = i.getStringExtra(getString(R.string.topic_id_intent_key));
-        } else {
+        }
+        else {
             topicName = null;
             topicId = null;
         }
@@ -74,7 +77,9 @@ public class SubTopicsFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+        @Nullable Bundle savedInstanceState)
+    {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View rootView = inflater.inflate(R.layout.fragment_subtopic, container, false);
@@ -90,7 +95,7 @@ public class SubTopicsFragment extends Fragment {
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(llm);
 
-        if(topicName != null) {
+        if (topicName != null) {
             activity.getSupportActionBar().setTitle(topicName);
         }
 
@@ -98,7 +103,7 @@ public class SubTopicsFragment extends Fragment {
             //NO DATA SAVED, FETCH FROM INTERNET
             if (topicId != null) {
                 FetchSubTopics fetchSubTopics = new FetchSubTopics();
-                fetchSubTopics.execute(GET_SUBTOPIC_URL + topicId);
+                fetchSubTopics.execute(topicId);
             }
         }
         else {
@@ -110,7 +115,7 @@ public class SubTopicsFragment extends Fragment {
             else {
                 if (topicId != null) {
                     FetchSubTopics fetchSubTopics = new FetchSubTopics();
-                    fetchSubTopics.execute(GET_SUBTOPIC_URL + topicId);
+                    fetchSubTopics.execute(topicId);
                 }
             }
         }
@@ -120,7 +125,7 @@ public class SubTopicsFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(KEY_SAVEDINSTANCE_DATA , subTopicsList);
+        outState.putParcelableArrayList(KEY_SAVEDINSTANCE_DATA, subTopicsList);
         super.onSaveInstanceState(outState);
 
     }
@@ -129,7 +134,7 @@ public class SubTopicsFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if(itemId == android.R.id.home){
+        if (itemId == android.R.id.home) {
             // Do stuff
             activity.finish();
         }
@@ -140,66 +145,57 @@ public class SubTopicsFragment extends Fragment {
 
         Log.d(TAG, "URL " + url);
 
-        Request request = new Request.Builder()
-            .url(url)
-            .build();
+        Request request = new Request.Builder().url(url).build();
 
         Response response = client.newCall(request).execute();
         return response.body().string();
     }
 
-    private class FetchSubTopics extends AsyncTask<String, String, String> {
-
-
-        @Override
-        protected String doInBackground(String... params) {
-            String JSONResult = null;
-            try {
-                JSONResult = run(params[0]);
-            } catch (IOException e) {
-                Log.e(TAG, "OkHTTP error " + e.getMessage());
-                JSONResult = null;
-            }
-            return JSONResult;
-        }
+    private class FetchSubTopics extends AsyncTask<String, ArrayList<SubTopicDO>, ArrayList<SubTopicDO>> {
 
         @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
+        protected ArrayList<SubTopicDO> doInBackground(String... params) {
 
-            subTopicsList = new ArrayList<>();
+            ParseQuery<ParseObject> query = ParseQuery.getQuery("SubTopics");
+            query.whereEqualTo("topicId", params[0]);
+            query.findInBackground(new FindCallback<ParseObject>() {
+                public void done(List<ParseObject> subTopicsDOList, ParseException e) {
+                    if (e == null) {
+                        subTopicsList = new ArrayList<>();
+                        for (ParseObject subTopic : subTopicsDOList) {
+                            SubTopicDO subTopicDO = new SubTopicDO();
 
-            if (result != null) {
-                try {
-                    Log.d(TAG, "result " + result);
-                    JSONObject jsonObject = new JSONObject(result);
-                    JSONArray resultArray = jsonObject.getJSONArray(TAG_RESULT);
-                    for (int i = 0; i < resultArray.length(); i++) {
-                        JSONObject arrayObject = resultArray.getJSONObject(i);
-                        SubTopicDO subTopicDO = new SubTopicDO();
+                            subTopicDO.setSubTopicId(subTopic.getInt(TAG_SUBTOPIC_ID));
+                            subTopicDO.setTopicId(subTopic.getInt(TAG_TOPIC_ID));
+                            subTopicDO.setSubTopicName(subTopic.getString(TAG_SUBTOPIC_NAME));
+                            subTopicDO.setThumbnailURL(subTopic.getString(TAG_SUBTOPIC_THUMBNAIL_URL));
+                            subTopicDO.setImageURL(subTopic.getString(TAG_SUBTOPIC_IAMGE_URL));
+                            subTopicDO.setSubTopicDescription(subTopic.getString(TAG_SUBTOPIC_DESCRIPTION));
+                            subTopicDO.setHoursRequired(subTopic.getInt(TAG_SUBTOPIC_HOURS_REQUIRED));
 
-                        subTopicDO.setId(arrayObject.getString(TAG_SUBTOPIC_ID));
-                        subTopicDO.setSubTopicName(arrayObject.getString(TAG_SUBTOPIC_NAME));
-                        subTopicDO.setThumbnailURL(arrayObject.getString(TAG_SUBTOPIC_THUMBNAIL_URL));
-                        subTopicDO.setImageURL(arrayObject.getString(TAG_SUBTOPIC_IAMGE_URL));
-                        subTopicDO.setSubTopicDescription(arrayObject.getString(TAG_SUBTOPIC_DESCRIPTION));
-                        subTopicDO.setHoursRequired(arrayObject.getString(TAG_SUBTOPIC_HOURS_REQUIRED));
-
-                        subTopicsList.add(subTopicDO);
+                            subTopicsList.add(subTopicDO);
+                        }
                     }
-
-                    //TODO call adapter here
-                    mAdapter = new SubTopicRecyclerAdapter(activity, subTopicsList);
-                    mRecyclerView.setAdapter(mAdapter);
-
-                } catch (Exception e) {
-                    Log.e(TAG, "JSON error " + e.getMessage());
+                    else {
+                        subTopicsList = null;
+                    }
                 }
+            });
 
-            }
-
+            return subTopicsList;
         }
-    }
 
+        @Override
+        protected void onPostExecute(ArrayList<SubTopicDO> subTopicsList) {
+            super.onPostExecute(subTopicsList);
+
+            //TODO call adapter here
+            if(subTopicsList != null) {
+                mAdapter = new SubTopicRecyclerAdapter(activity, subTopicsList);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
+
+    }
 
 }

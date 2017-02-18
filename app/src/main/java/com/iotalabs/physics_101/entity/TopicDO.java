@@ -9,10 +9,10 @@ import android.os.Parcelable;
 
 public class TopicDO implements Parcelable{
 
-    private String id;
+    private int topicId;
     private String topicName;
-    private String numberOfSubTopics;
-    private String hoursRequired;
+    private int numberOfSubTopics;
+    private int hoursRequired;
     private String imageURL;
 
     public TopicDO() {
@@ -26,10 +26,10 @@ public class TopicDO implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(topicId);
         dest.writeString(topicName);
-        dest.writeString(numberOfSubTopics);
-        dest.writeString(hoursRequired);
+        dest.writeInt(numberOfSubTopics);
+        dest.writeInt(hoursRequired);
         dest.writeString(imageURL);
     }
 
@@ -46,20 +46,20 @@ public class TopicDO implements Parcelable{
 
     // "De-parcel object
     public TopicDO(Parcel in) {
-        id = in.readString();
+        topicId = in.readInt();
         topicName = in.readString();
-        numberOfSubTopics = in.readString();
-        hoursRequired = in.readString();
+        numberOfSubTopics = in.readInt();
+        hoursRequired = in.readInt();
         imageURL = in.readString();
     }
 
 
-    public String getId() {
-        return id;
+    public int getTopicId() {
+        return topicId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
     public String getTopicName() {
@@ -70,19 +70,19 @@ public class TopicDO implements Parcelable{
         this.topicName = topicName;
     }
 
-    public String getNumberOfSubTopics() {
+    public int getNumberOfSubTopics() {
         return numberOfSubTopics;
     }
 
-    public void setNumberOfSubTopics(String numberOfSubTopics) {
+    public void setNumberOfSubTopics(int numberOfSubTopics) {
         this.numberOfSubTopics = numberOfSubTopics;
     }
 
-    public String getHoursRequired() {
+    public int getHoursRequired() {
         return hoursRequired;
     }
 
-    public void setHoursRequired(String hoursRequired) {
+    public void setHoursRequired(int hoursRequired) {
         this.hoursRequired = hoursRequired;
     }
 

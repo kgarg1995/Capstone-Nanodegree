@@ -9,12 +9,13 @@ import android.os.Parcelable;
 
 public class SubTopicDO implements Parcelable {
 
-    private String id;
+    private int subTopicId;
+    private int topicId;
     private String thumbnailURL;
     private String imageURL;
     private String subTopicName;
     private String subTopicDescription;
-    private String hoursRequired;
+    private int hoursRequired;
 
 
     public SubTopicDO(){
@@ -28,12 +29,13 @@ public class SubTopicDO implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        dest.writeInt(subTopicId);
+        dest.writeInt(topicId);
         dest.writeString(thumbnailURL);
         dest.writeString(imageURL);
         dest.writeString(subTopicName);
         dest.writeString(subTopicDescription);
-        dest.writeString(hoursRequired);
+        dest.writeInt(hoursRequired);
     }
 
     // Creator
@@ -49,20 +51,29 @@ public class SubTopicDO implements Parcelable {
 
     // "De-parcel object
     public SubTopicDO(Parcel in) {
-        id = in.readString();
+        subTopicId = in.readInt();
+        topicId = in.readInt();
         thumbnailURL = in.readString();
         imageURL = in.readString();
         subTopicName = in.readString();
         subTopicDescription = in.readString();
-        hoursRequired = in.readString();
+        hoursRequired = in.readInt();
     }
 
-    public String getId() {
-        return id;
+    public int getSubTopicId() {
+        return subTopicId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setSubTopicId(int subTopicId) {
+        this.subTopicId = subTopicId;
+    }
+
+    public int getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(int topicId) {
+        this.topicId = topicId;
     }
 
     public String getThumbnailURL() {
@@ -97,11 +108,11 @@ public class SubTopicDO implements Parcelable {
         this.subTopicDescription = subTopicDescription;
     }
 
-    public String getHoursRequired() {
+    public int getHoursRequired() {
         return hoursRequired;
     }
 
-    public void setHoursRequired(String hoursRequired) {
+    public void setHoursRequired(int hoursRequired) {
         this.hoursRequired = hoursRequired;
     }
 
